@@ -52,8 +52,10 @@ create policy "Allow public qualified lead inserts"
   with check (
     qualified = true
     and status = 'qualified'
-    and coalesce(length(trim(lead_name)), 0) >= 2
-    and coalesce(length(regexp_replace(whatsapp_digits, '\D', '', 'g')), 0) >= 10
+    and lead_name is not null
+    and length(trim(lead_name)) >= 2
+    and whatsapp_digits is not null
+    and length(whatsapp_digits) >= 10
   );
 
 drop policy if exists "No public lead reads" on public.quiz_leads;
