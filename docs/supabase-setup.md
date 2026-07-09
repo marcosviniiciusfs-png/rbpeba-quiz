@@ -3,7 +3,7 @@
 Projeto alvo:
 
 ```text
-https://puqgefbsrknxhpeafsjq.supabase.co
+https://pugqefbsrknxhpeafsjq.supabase.co
 ```
 
 ## 1. Criar tabela de leads
@@ -32,7 +32,7 @@ A tabela criada sera `public.quiz_leads`, com colunas separadas para:
 Configurar variavel e secret no GitHub:
 
 ```bash
-gh variable set SUPABASE_URL --body "https://puqgefbsrknxhpeafsjq.supabase.co" --repo marcosviniiciusfs-png/quiz-hurtzcompany
+gh variable set SUPABASE_URL --body "https://pugqefbsrknxhpeafsjq.supabase.co" --repo marcosviniiciusfs-png/quiz-hurtzcompany
 gh secret set SUPABASE_ANON_KEY --repo marcosviniiciusfs-png/quiz-hurtzcompany
 ```
 
@@ -45,14 +45,14 @@ O workflow de deploy cria `config.js` automaticamente com esses valores.
 Deploy da function:
 
 ```bash
-supabase functions deploy submit-qualified-lead --project-ref puqgefbsrknxhpeafsjq
+supabase functions deploy submit-qualified-lead --project-ref pugqefbsrknxhpeafsjq
 ```
 
 Secrets necessarios:
 
 ```bash
-supabase secrets set META_PIXEL_ID="SEU_PIXEL_ID" --project-ref puqgefbsrknxhpeafsjq
-supabase secrets set META_ACCESS_TOKEN="SEU_TOKEN_DA_CONVERSIONS_API" --project-ref puqgefbsrknxhpeafsjq
+supabase secrets set META_PIXEL_ID="SEU_PIXEL_ID" --project-ref pugqefbsrknxhpeafsjq
+supabase secrets set META_ACCESS_TOKEN="SEU_TOKEN_DA_CONVERSIONS_API" --project-ref pugqefbsrknxhpeafsjq
 ```
 
 Sem esses secrets, o lead ainda pode ser salvo no banco, mas a conversao da Meta nao sera enviada.
