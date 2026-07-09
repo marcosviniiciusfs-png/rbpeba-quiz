@@ -720,11 +720,14 @@
 
     @media (max-width: 620px) {
       body {
+        min-height: 100svh;
         padding: 10px;
+        place-items: start center;
       }
 
       .app {
-        min-height: calc(100vh - 20px);
+        min-height: auto;
+        align-content: start;
       }
 
       .progress-wrap {
@@ -733,16 +736,44 @@
 
       .quiz-card,
       .screen {
-        min-height: 610px;
+        min-height: auto;
+      }
+
+      .quiz-card {
+        width: 100%;
       }
 
       .screen {
-        padding: 24px 18px;
+        min-height: calc(100svh - 74px);
+        padding: 22px 16px;
+      }
+
+      .screen.active {
+        align-content: start;
+        gap: 18px;
+      }
+
+      .kicker {
+        padding: 7px 10px;
+        font-size: 0.72rem;
+      }
+
+      h2 {
+        font-size: clamp(1.55rem, 8vw, 2.35rem);
+        line-height: 1.12;
       }
 
       .benefit-strip,
       .option-grid {
         grid-template-columns: 1fr;
+      }
+
+      .interest-card {
+        min-height: auto;
+      }
+
+      .interest-body {
+        padding: 13px 14px 15px;
       }
 
       .benefit-strip {
@@ -762,10 +793,61 @@
         text-align: left;
       }
 
+      .range-value {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .range-value small {
+        text-align: left;
+      }
+
+      .final-badge {
+        width: 78px;
+        height: 78px;
+        font-size: 2.45rem;
+      }
+
+      .chart-loader {
+        height: 150px;
+        gap: 9px;
+        padding: 18px;
+      }
+
+      .chart-loader span {
+        width: 26px;
+      }
+
       .social-proof {
         left: 10px;
         top: 10px;
         width: calc(100vw - 20px);
+      }
+    }
+
+    @media (max-width: 380px) {
+      .progress-meta {
+        font-size: 0.68rem;
+        gap: 6px;
+      }
+
+      .restart-btn {
+        padding: 4px 8px;
+        font-size: 0.66rem;
+      }
+
+      .screen {
+        padding: 20px 14px;
+      }
+
+      h2 {
+        font-size: clamp(1.42rem, 8.6vw, 2rem);
+      }
+
+      .text-input,
+      .btn {
+        min-height: 54px;
       }
     }
   </style>
