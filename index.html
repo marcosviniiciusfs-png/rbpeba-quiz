@@ -1213,17 +1213,29 @@
         <span class="kicker">📈 Crédito</span>
         <h2 id="valorCreditoTitle">Qual valor de crédito você pretende adquirir?</h2>
         <p class="helper">Pode ser uma estimativa do valor do bem ou da carta que você busca.</p>
-        <div class="range-box">
-          <div class="range-value">
-            <strong id="creditoValorLabel">R$ 250.000</strong>
-            <small>De R$ 30 mil a R$ 1 milhão</small>
-          </div>
-          <input id="valorCredito" type="range" min="30000" max="1000000" step="10000" value="250000" />
+        <div class="option-grid">
+          <button class="option-card" type="button" data-choice="valorCredito" data-value="100000" data-label="R$ 50 mil a R$ 100 mil">
+            <span class="option-icon">💳</span>
+            <span class="option-title">R$ 50 mil a R$ 100 mil</span>
+            <span class="option-sub">Para um objetivo mais enxuto.</span>
+          </button>
+          <button class="option-card" type="button" data-choice="valorCredito" data-value="200000" data-label="R$ 100 mil a R$ 200 mil">
+            <span class="option-icon">🏦</span>
+            <span class="option-title">R$ 100 mil a R$ 200 mil</span>
+            <span class="option-sub">Uma faixa intermediária.</span>
+          </button>
+          <button class="option-card" type="button" data-choice="valorCredito" data-value="400000" data-label="R$ 200 mil a R$ 400 mil">
+            <span class="option-icon">📈</span>
+            <span class="option-title">R$ 200 mil a R$ 400 mil</span>
+            <span class="option-sub">Para um plano maior.</span>
+          </button>
+          <button class="option-card" type="button" data-choice="valorCredito" data-value="1000000" data-label="R$ 500 mil a R$ 1 milhão">
+            <span class="option-icon">💎</span>
+            <span class="option-title">R$ 500 mil a R$ 1 milhão</span>
+            <span class="option-sub">Para créditos mais altos.</span>
+          </button>
         </div>
-        <div class="actions">
-          <button class="btn" type="button" data-next-range="valorCredito">Continuar 💪</button>
-          <button class="btn secondary" type="button" data-back>Voltar</button>
-        </div>
+        <div class="toast" id="creditoToast"></div>
       </div>
 
       <div class="screen" data-screen="5">
@@ -1382,7 +1394,8 @@
       nome: "",
       interesse: "",
       temEntrada: "",
-      valorCredito: 250000,
+      valorCredito: 0,
+      valorCreditoLabel: "",
       valorEntrada: 50000,
       valorParcela: 1500,
       prazo: "",
@@ -1400,9 +1413,7 @@
     const activeSimulations = document.getElementById("activeSimulations");
     const nomeInput = document.getElementById("nome");
     const telefoneInput = document.getElementById("telefone");
-    const valorCreditoInput = document.getElementById("valorCredito");
     const valorEntradaInput = document.getElementById("valorEntrada");
-    const creditoValorLabel = document.getElementById("creditoValorLabel");
     const valorParcelaInput = document.getElementById("valorParcela");
     const entradaValorLabel = document.getElementById("entradaValorLabel");
     const parcelaValorLabel = document.getElementById("parcelaValorLabel");
@@ -1439,7 +1450,8 @@
         nome: "",
         interesse: "",
         temEntrada: "",
-        valorCredito: 250000,
+        valorCredito: 0,
+        valorCreditoLabel: "",
         valorEntrada: 50000,
         valorParcela: 1500,
         prazo: "",
@@ -1451,7 +1463,6 @@
 
       nomeInput.value = "";
       telefoneInput.value = "";
-      valorCreditoInput.value = 250000;
       valorEntradaInput.value = 50000;
       valorParcelaInput.value = 1500;
       document.querySelectorAll(".error").forEach((error) => {
@@ -1470,7 +1481,6 @@
         if (state.screen < 1) state.screen = 1;
         nomeInput.value = state.nome || "";
         telefoneInput.value = state.telefone || "";
-        valorCreditoInput.value = state.valorCredito || 250000;
         valorEntradaInput.value = state.valorEntrada || 50000;
         valorParcelaInput.value = state.valorParcela || 1500;
       } catch (error) {
@@ -1515,7 +1525,6 @@
     }
 
     function updateRangeLabels() {
-      creditoValorLabel.textContent = formatCurrency(state.valorCredito);
       entradaValorLabel.textContent = formatCurrency(state.valorEntrada);
       parcelaValorLabel.textContent = formatCurrency(state.valorParcela);
     }
@@ -1540,7 +1549,7 @@
 
       document.getElementById("leadSummary").innerHTML = `
         <div>Interesse <span>${state.interesse || "-"}</span></div>
-        <div>Crédito desejado <span>${formatCurrency(state.valorCredito || 0)}</span></div>
+        <div>Crédito desejado <span>${state.valorCreditoLabel || "-"}</span></div>
         <div>Entrada <span>${entrada}</span></div>
         <div>Parcela ideal <span>${parcela}</span></div>
         <div>Prazo <span>${prazo}</span></div>
@@ -1631,12 +1640,22 @@
         const next = value === "Sim" ? 4 : 10;
         if (value === "Não") {
           state.valorCredito = 0;
+          state.valorCreditoLabel = "";
           state.valorEntrada = 0;
           state.prazo = "";
           state.valorParcela = 0;
         }
         showToast("entradaToast", value === "Sim" ? "Perfeito! Vamos calibrar a simulação ✨" : "Obrigado. Vamos finalizar sua análise.");
         window.setTimeout(() => showScreen(next), 220);
+        return;
+      }
+
+      if (key === "valorCredito") {
+        const selectedButton = document.querySelector(`[data-choice="valorCredito"][data-value="${value}"]`);
+        state.valorCredito = Number(value);
+        state.valorCreditoLabel = selectedButton?.dataset.label || formatCurrency(value);
+        showToast("creditoToast", "Perfeito! Agora vamos entender sua entrada.");
+        window.setTimeout(() => showScreen(5), 220);
         return;
       }
 
@@ -1664,7 +1683,7 @@
         ? `${state.temEntrada}, ${formatCurrency(state.valorEntrada)}`
         : "Não possui entrada no momento";
       const credito = state.temEntrada === "Sim"
-        ? formatCurrency(state.valorCredito)
+        ? state.valorCreditoLabel || formatCurrency(state.valorCredito)
         : "Não informado";
       const parcela = state.temEntrada === "Sim"
         ? formatCurrency(state.valorParcela)
@@ -1751,6 +1770,7 @@
           interesse: state.interesse,
           temEntrada: state.temEntrada,
           valorCredito: state.valorCredito,
+          valorCreditoLabel: state.valorCreditoLabel,
           valorEntrada: state.valorEntrada,
           valorParcela: state.valorParcela,
           prazo: state.prazo,
@@ -1938,9 +1958,7 @@
 
     document.querySelectorAll("[data-next-range]").forEach((button) => {
       button.addEventListener("click", () => {
-        const next = button.dataset.nextRange === "valorCredito"
-          ? 5
-          : button.dataset.nextRange === "valorEntrada"
+        const next = button.dataset.nextRange === "valorEntrada"
             ? 6
             : 7;
         showScreen(next);
@@ -1960,12 +1978,6 @@
       telefoneInput.value = maskPhone(telefoneInput.value);
       state.telefone = telefoneInput.value;
       document.getElementById("telefoneError").textContent = "";
-      saveState();
-    });
-
-    valorCreditoInput.addEventListener("input", () => {
-      state.valorCredito = Number(valorCreditoInput.value);
-      updateRangeLabels();
       saveState();
     });
 
