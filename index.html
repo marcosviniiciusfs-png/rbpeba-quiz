@@ -391,6 +391,11 @@
       gap: 12px;
     }
 
+    .option-list {
+      display: grid;
+      gap: 10px;
+    }
+
     .option-card,
     .choice-btn {
       width: 100%;
@@ -476,6 +481,44 @@
       border-color: var(--cor-secundaria);
       background: var(--cor-soft);
       box-shadow: var(--sombra-card);
+    }
+
+    .list-option {
+      min-height: 66px;
+      grid-template-columns: 42px 1fr 28px;
+      align-items: center;
+      align-content: center;
+      gap: 12px;
+      padding: 11px 12px;
+      box-shadow: none;
+    }
+
+    .list-option::after {
+      content: "›";
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--cor-secundaria);
+      color: #ffffff;
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    .list-option .option-icon {
+      width: 42px;
+      height: 42px;
+      font-size: 1.35rem;
+    }
+
+    .list-option .option-title {
+      font-size: 0.98rem;
+    }
+
+    .list-option .option-sub {
+      font-size: 0.78rem;
+      line-height: 1.3;
     }
 
     .option-icon {
@@ -1213,26 +1256,34 @@
         <span class="kicker">📈 Crédito</span>
         <h2 id="valorCreditoTitle">Qual valor de crédito você pretende adquirir?</h2>
         <p class="helper">Pode ser uma estimativa do valor do bem ou da carta que você busca.</p>
-        <div class="option-grid">
-          <button class="option-card" type="button" data-choice="valorCredito" data-value="100000" data-label="R$ 50 mil a R$ 100 mil">
+        <div class="option-list">
+          <button class="option-card list-option" type="button" data-choice="valorCredito" data-value="100000" data-label="R$ 50 mil a R$ 100 mil">
             <span class="option-icon">💳</span>
-            <span class="option-title">R$ 50 mil a R$ 100 mil</span>
-            <span class="option-sub">Para um objetivo mais enxuto.</span>
+            <span>
+              <span class="option-title">R$ 50 mil a R$ 100 mil</span>
+              <span class="option-sub">Para um objetivo mais enxuto.</span>
+            </span>
           </button>
-          <button class="option-card" type="button" data-choice="valorCredito" data-value="200000" data-label="R$ 100 mil a R$ 200 mil">
+          <button class="option-card list-option" type="button" data-choice="valorCredito" data-value="200000" data-label="R$ 100 mil a R$ 200 mil">
             <span class="option-icon">🏦</span>
-            <span class="option-title">R$ 100 mil a R$ 200 mil</span>
-            <span class="option-sub">Uma faixa intermediária.</span>
+            <span>
+              <span class="option-title">R$ 100 mil a R$ 200 mil</span>
+              <span class="option-sub">Uma faixa intermediária.</span>
+            </span>
           </button>
-          <button class="option-card" type="button" data-choice="valorCredito" data-value="400000" data-label="R$ 200 mil a R$ 400 mil">
+          <button class="option-card list-option" type="button" data-choice="valorCredito" data-value="400000" data-label="R$ 200 mil a R$ 400 mil">
             <span class="option-icon">📈</span>
-            <span class="option-title">R$ 200 mil a R$ 400 mil</span>
-            <span class="option-sub">Para um plano maior.</span>
+            <span>
+              <span class="option-title">R$ 200 mil a R$ 400 mil</span>
+              <span class="option-sub">Para um plano maior.</span>
+            </span>
           </button>
-          <button class="option-card" type="button" data-choice="valorCredito" data-value="1000000" data-label="R$ 500 mil a R$ 1 milhão">
+          <button class="option-card list-option" type="button" data-choice="valorCredito" data-value="1000000" data-label="R$ 500 mil a R$ 1 milhão">
             <span class="option-icon">💎</span>
-            <span class="option-title">R$ 500 mil a R$ 1 milhão</span>
-            <span class="option-sub">Para créditos mais altos.</span>
+            <span>
+              <span class="option-title">R$ 500 mil a R$ 1 milhão</span>
+              <span class="option-sub">Para créditos mais altos.</span>
+            </span>
           </button>
         </div>
         <div class="toast" id="creditoToast"></div>
