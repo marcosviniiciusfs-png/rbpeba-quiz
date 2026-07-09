@@ -1222,8 +1222,12 @@
     </aside>
   </main>
 
+  <script src="./config.js"></script>
   <script>
     const WHATSAPP_NUMERO = "55XXXXXXXXXXX";
+    const SUPABASE_URL = window.QUIZ_CONFIG?.SUPABASE_URL || "https://puqgefbsrknxhpeafsjq.supabase.co";
+    const SUPABASE_ANON_KEY = window.QUIZ_CONFIG?.SUPABASE_ANON_KEY || "";
+    const SUPABASE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/submit-qualified-lead`;
     const STORAGE_KEY = "quiz-hurtz-lead-progress";
     const SOCIAL_PROOF_INTERVALS = [5000, 15000, 10000];
     const SOCIAL_PROOF_VISIBLE_MS = 10000;
@@ -1245,7 +1249,10 @@
       valorEntrada: 50000,
       valorParcela: 1500,
       prazo: "",
-      telefone: ""
+      telefone: "",
+      leadSaved: false,
+      leadSaveError: "",
+      leadEventId: ""
     };
 
     const screens = Array.from(document.querySelectorAll(".screen"));
@@ -1293,7 +1300,10 @@
         valorEntrada: 50000,
         valorParcela: 1500,
         prazo: "",
-        telefone: ""
+        telefone: "",
+        leadSaved: false,
+        leadSaveError: "",
+        leadEventId: ""
       });
 
       nomeInput.value = "";
@@ -1404,7 +1414,10 @@
       if (index === 7) {
         analysisTimer = window.setTimeout(() => showScreen(8), 5000);
       }
-      if (index === 8) startConfetti();
+      if (index === 8) {
+        startConfetti();
+        saveQualifiedLead();
+      }
       saveState();
     }
 
@@ -1520,6 +1533,131 @@
         "",
         "Pode me chamar para uma simulação?"
       ].join("\n");
+    }
+
+    function isSupabaseConfigured() {
+      return Boolean(
+        SUPABASE_URL
+        && SUPABASE_ANON_KEY
+        && !SUPABASE_ANON_KEY.includes("COLE_AQUI")
+      );
+    }
+
+    function getCookie(name) {
+      return document.cookie
+        .split(";")
+        .map((item) => item.trim())
+        .find((item) => item.startsWith(`${name}=`))
+        ?.split("=")
+        .slice(1)
+        .join("=") || "";
+    }
+
+    function getTrackingParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        utm_source: params.get("utm_source") || "",
+        utm_medium: params.get("utm_medium") || "",
+        utm_campaign: params.get("utm_campaign") || "",
+        utm_content: params.get("utm_content") || "",
+        utm_term: params.get("utm_term") || "",
+        fbclid: params.get("fbclid") || "",
+        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc")
+      };
+    }
+
+    function createEventId() {
+      if (window.crypto?.randomUUID) return crypto.randomUUID();
+      return `lead-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function buildLeadPayload() {
+      if (!state.leadEventId) state.leadEventId = createEventId();
+      const tracking = getTrackingParams();
+
+      return {
+        qualified: true,
+        status: "qualified",
+        lead_name: state.nome,
+        whatsapp: state.telefone,
+        whatsapp_digits: onlyDigits(state.telefone),
+        interest: state.interesse,
+        has_down_payment: state.temEntrada,
+        down_payment_value: state.temEntrada === "Sim" ? Number(state.valorEntrada) : 0,
+        monthly_payment_value: state.temEntrada === "Sim" ? Number(state.valorParcela) : null,
+        purchase_timeline: state.temEntrada === "Sim" ? state.prazo : "",
+        source_url: window.location.href,
+        landing_domain: window.location.hostname,
+        user_agent: navigator.userAgent,
+        meta_event_id: state.leadEventId,
+        ...tracking,
+        raw_answers: {
+          nome: state.nome,
+          telefone: state.telefone,
+          interesse: state.interesse,
+          temEntrada: state.temEntrada,
+          valorEntrada: state.valorEntrada,
+          valorParcela: state.valorParcela,
+          prazo: state.prazo,
+          dataHoraLocal: new Date().toISOString()
+        }
+      };
+    }
+
+    async function postLeadToSupabase(payload) {
+      const headers = {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json"
+      };
+
+      const functionResponse = await fetch(SUPABASE_FUNCTION_URL, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload)
+      });
+
+      if (functionResponse.ok) return functionResponse.json();
+
+      const restResponse = await fetch(`${SUPABASE_URL}/rest/v1/quiz_leads`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Prefer: "return=representation"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!restResponse.ok) {
+        const errorText = await restResponse.text();
+        throw new Error(errorText || "Erro ao salvar lead no Supabase");
+      }
+
+      return restResponse.json();
+    }
+
+    async function saveQualifiedLead() {
+      if (state.leadSaved || state.temEntrada !== "Sim") return;
+
+      if (!isSupabaseConfigured()) {
+        state.leadSaveError = "Supabase anon key ausente";
+        saveState();
+        console.warn("Configure SUPABASE_ANON_KEY para salvar leads no Supabase.");
+        return;
+      }
+
+      try {
+        const payload = buildLeadPayload();
+        await postLeadToSupabase(payload);
+        state.leadSaved = true;
+        state.leadSaveError = "";
+        saveState();
+      } catch (error) {
+        state.leadSaveError = String(error?.message || error);
+        saveState();
+        console.error("Erro ao salvar lead qualificado:", error);
+      }
     }
 
     function submitToWhatsapp() {
