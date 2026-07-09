@@ -831,6 +831,195 @@
       50% { transform: scaleX(1); opacity: 1; }
     }
 
+    .analysis-panel.is-sending {
+      width: min(100%, 500px);
+      justify-self: center;
+      justify-items: stretch;
+      text-align: left;
+      gap: 14px;
+      padding: clamp(18px, 4vw, 26px);
+      border: 1px solid var(--cor-borda);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: var(--sombra-card);
+    }
+
+    .analysis-panel.is-sending h2 {
+      font-size: clamp(1.8rem, 7vw, 2.3rem);
+    }
+
+    .analysis-panel.is-sending .status-note {
+      font-size: 0.98rem;
+      margin-top: -6px;
+    }
+
+    .analysis-dashboard {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 18px;
+      align-items: center;
+      padding: 16px;
+      border: 1px solid var(--cor-borda);
+      border-radius: var(--raio);
+      background: #ffffff;
+    }
+
+    .analysis-ring {
+      position: relative;
+      width: 148px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .analysis-ring svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .analysis-ring circle {
+      fill: none;
+      stroke-width: 12;
+      stroke-linecap: round;
+    }
+
+    .analysis-ring-bg {
+      stroke: #dbe6ee;
+    }
+
+    .analysis-ring-progress {
+      stroke: var(--cor-secundaria);
+      stroke-dasharray: 314;
+      stroke-dashoffset: 314;
+      transition: stroke-dashoffset 0.18s linear;
+    }
+
+    .analysis-ring-value {
+      display: grid;
+      justify-items: center;
+      color: var(--cor-primaria);
+      font-weight: 900;
+      line-height: 1;
+      z-index: 1;
+    }
+
+    .analysis-ring-value strong {
+      font-size: 2rem;
+    }
+
+    .analysis-ring-value span {
+      margin-top: 6px;
+      color: var(--cor-suave);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .analysis-bars {
+      display: grid;
+      gap: 12px;
+    }
+
+    .analysis-bar-row {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 12px;
+      align-items: center;
+      color: var(--cor-suave);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .analysis-bar-track {
+      height: 9px;
+      border-radius: 9px;
+      background: #dce7ee;
+      overflow: hidden;
+    }
+
+    .analysis-bar-fill {
+      display: block;
+      width: var(--w);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cor-secundaria), #7b9cf4);
+      animation: analysis-bar-scan 1.15s ease-in-out infinite alternate;
+    }
+
+    .analysis-bar-row:nth-child(2) .analysis-bar-fill { animation-delay: 0.14s; }
+    .analysis-bar-row:nth-child(3) .analysis-bar-fill { animation-delay: 0.28s; }
+    .analysis-bar-row:nth-child(4) .analysis-bar-fill { animation-delay: 0.42s; }
+
+    @keyframes analysis-bar-scan {
+      from { transform: translateX(-18%); opacity: 0.58; }
+      to { transform: translateX(6%); opacity: 1; }
+    }
+
+    .analysis-steps {
+      display: grid;
+      gap: 10px;
+    }
+
+    .analysis-step {
+      min-height: 64px;
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid var(--cor-borda);
+      border-radius: var(--raio);
+      background: #ffffff;
+      color: var(--cor-primaria);
+      transition: border-color 0.22s ease, background-color 0.22s ease, transform 0.22s ease;
+    }
+
+    .analysis-step-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--raio);
+      background: #eef4f7;
+      color: #94a3b8;
+      font-size: 1.25rem;
+      transition: background-color 0.22s ease, color 0.22s ease;
+    }
+
+    .analysis-step-title {
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .analysis-step-status {
+      color: #94a3b8;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .analysis-step.is-done {
+      border-color: #cfe9dc;
+      background: #fbfffd;
+      transform: translateY(-1px);
+    }
+
+    .analysis-step.is-done .analysis-step-icon {
+      background: #e7f8ef;
+      color: var(--cor-secundaria);
+    }
+
+    .analysis-step.is-done .analysis-step-status {
+      color: var(--cor-acao);
+    }
+
     .status-note {
       color: var(--cor-suave);
       font-size: 0.98rem;
@@ -1131,6 +1320,35 @@
         height: 62px;
       }
 
+      .analysis-panel.is-sending {
+        padding: 16px;
+      }
+
+      .analysis-dashboard {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 14px;
+        padding: 14px;
+      }
+
+      .analysis-ring {
+        width: 136px;
+      }
+
+      .analysis-bars {
+        width: 100%;
+      }
+
+      .analysis-step {
+        grid-template-columns: 38px 1fr auto;
+        gap: 10px;
+      }
+
+      .analysis-step-icon {
+        width: 38px;
+        height: 38px;
+      }
+
       .social-proof {
         right: 10px;
         bottom: 14px;
@@ -1353,31 +1571,49 @@
       </div>
 
       <div class="screen" data-screen="8">
-        <div class="analysis-panel">
-          <span class="kicker">📊 Análise</span>
-          <div class="chart-loader" aria-hidden="true">
-            <div class="bar-chart">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
+        <div class="analysis-panel is-sending">
+          <h2>Enviando suas respostas</h2>
+          <p class="status-note">Estamos deixando tudo pronto para te chamar no WhatsApp.</p>
+          <div class="analysis-dashboard" aria-label="Progresso do envio">
+            <div class="analysis-ring" aria-live="polite">
+              <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                <circle class="analysis-ring-bg" cx="60" cy="60" r="50"></circle>
+                <circle class="analysis-ring-progress" id="analysisRingProgress" cx="60" cy="60" r="50"></circle>
+              </svg>
+              <span class="analysis-ring-value">
+                <strong id="analysisPercentNumber">0</strong>
+                <span>OK</span>
+              </span>
             </div>
-            <svg class="chart-line" viewBox="0 0 320 74" role="img" aria-label="Linha de análise de crédito">
-              <path d="M12 58 C58 24, 88 64, 132 34 S210 18, 246 42 S288 54, 308 16"></path>
-              <circle cx="62" cy="31" r="6"></circle>
-              <circle cx="132" cy="34" r="6"></circle>
-              <circle cx="226" cy="32" r="6"></circle>
-              <circle cx="308" cy="16" r="6"></circle>
-            </svg>
-            <div class="analysis-dots">
-              <span></span>
-              <span></span>
-              <span></span>
+            <div class="analysis-bars" aria-hidden="true">
+              <div class="analysis-bar-row"><span>Objetivo</span><i class="analysis-bar-track"><b class="analysis-bar-fill" style="--w: 72%"></b></i></div>
+              <div class="analysis-bar-row"><span>Entrada</span><i class="analysis-bar-track"><b class="analysis-bar-fill" style="--w: 56%"></b></i></div>
+              <div class="analysis-bar-row"><span>Renda</span><i class="analysis-bar-track"><b class="analysis-bar-fill" style="--w: 64%"></b></i></div>
+              <div class="analysis-bar-row"><span>Prazo</span><i class="analysis-bar-track"><b class="analysis-bar-fill" style="--w: 82%"></b></i></div>
             </div>
           </div>
-          <h2>O sistema está analisando seu perfil para liberação de crédito</h2>
-          <p class="status-note">Estamos cruzando objetivo, crédito desejado, entrada, parcela e prazo para organizar sua posição de atendimento.</p>
+          <div class="analysis-steps">
+            <div class="analysis-step" data-analysis-step>
+              <span class="analysis-step-icon">◎</span>
+              <span class="analysis-step-title">Objetivo recebido</span>
+              <span class="analysis-step-status">...</span>
+            </div>
+            <div class="analysis-step" data-analysis-step>
+              <span class="analysis-step-icon">%</span>
+              <span class="analysis-step-title">Valores recebidos</span>
+              <span class="analysis-step-status">...</span>
+            </div>
+            <div class="analysis-step" data-analysis-step>
+              <span class="analysis-step-icon">▥</span>
+              <span class="analysis-step-title">Contato confirmado</span>
+              <span class="analysis-step-status">...</span>
+            </div>
+            <div class="analysis-step" data-analysis-step>
+              <span class="analysis-step-icon">⌕</span>
+              <span class="analysis-step-title">WhatsApp pronto</span>
+              <span class="analysis-step-status">...</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1475,12 +1711,16 @@
     const socialProof = document.getElementById("socialProof");
     const socialProofTitle = document.getElementById("socialProofTitle");
     const socialProofText = document.getElementById("socialProofText");
+    const analysisPercentNumber = document.getElementById("analysisPercentNumber");
+    const analysisRingProgress = document.getElementById("analysisRingProgress");
     let socialProofIndex = 0;
     let socialProofIntervalIndex = 0;
     let socialProofTimer;
     let liveCounterTimer;
     let activeSimulationCount = 10;
     let analysisTimer;
+    let analysisProgressTimer;
+    let analysisStepTimers = [];
     let audioReady = false;
     let metaLeadTracked = false;
 
@@ -1613,7 +1853,7 @@
     }
 
     function showScreen(index) {
-      window.clearTimeout(analysisTimer);
+      clearAnalysisProgress();
       state.screen = index;
       app.classList.toggle("is-disqualified", index === 10);
       screens.forEach((screen) => {
@@ -1625,6 +1865,7 @@
       updateSelectedCards();
       updateSummary();
       if (index === 8) {
+        startAnalysisProgress();
         analysisTimer = window.setTimeout(() => showScreen(9), 5000);
       }
       if (index === 9) {
@@ -1639,6 +1880,48 @@
       toast.textContent = message;
       toast.classList.add("show");
       window.setTimeout(() => toast.classList.remove("show"), 700);
+    }
+
+    function clearAnalysisProgress() {
+      window.clearTimeout(analysisTimer);
+      window.clearInterval(analysisProgressTimer);
+      analysisStepTimers.forEach((timer) => window.clearTimeout(timer));
+      analysisStepTimers = [];
+    }
+
+    function startAnalysisProgress() {
+      clearAnalysisProgress();
+      const steps = Array.from(document.querySelectorAll("[data-analysis-step]"));
+      const circumference = 314;
+      let percent = 0;
+
+      if (analysisPercentNumber) analysisPercentNumber.textContent = "0";
+      if (analysisRingProgress) analysisRingProgress.style.strokeDashoffset = String(circumference);
+
+      steps.forEach((step) => {
+        step.classList.remove("is-done");
+        const status = step.querySelector(".analysis-step-status");
+        if (status) status.textContent = "...";
+      });
+
+      analysisProgressTimer = window.setInterval(() => {
+        percent = Math.min(100, percent + 4);
+        if (analysisPercentNumber) analysisPercentNumber.textContent = String(percent);
+        if (analysisRingProgress) {
+          const offset = circumference - (circumference * percent / 100);
+          analysisRingProgress.style.strokeDashoffset = String(offset);
+        }
+        if (percent >= 100) window.clearInterval(analysisProgressTimer);
+      }, 190);
+
+      steps.forEach((step, index) => {
+        const timer = window.setTimeout(() => {
+          step.classList.add("is-done");
+          const status = step.querySelector(".analysis-step-status");
+          if (status) status.textContent = "OK";
+        }, 700 + index * 900);
+        analysisStepTimers.push(timer);
+      });
     }
 
     function validateName() {
