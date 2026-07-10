@@ -1826,9 +1826,19 @@
       `;
     }
 
+    function updateResultUrl(index) {
+      if (!window.history?.replaceState) return;
+      const url = new URL(window.location.href);
+      const targetPath = index === 9 ? "/resultado" : "/";
+      if (url.pathname === targetPath) return;
+      url.pathname = targetPath;
+      window.history.replaceState({ screen: index }, "", url.toString());
+    }
+
     function showScreen(index) {
       clearAnalysisProgress();
       state.screen = index;
+      updateResultUrl(index);
       app.classList.toggle("is-disqualified", index === 10);
       screens.forEach((screen) => {
         screen.classList.toggle("active", Number(screen.dataset.screen) === index);
