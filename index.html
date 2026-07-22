@@ -1630,8 +1630,9 @@
     const SUPABASE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/submit-qualified-lead`;
     const META_PIXEL_ID = "561285766391551";
     const LEGACY_STORAGE_KEY = "quiz-hurtz-lead-progress";
-    const SOCIAL_PROOF_INTERVALS = [5000, 15000, 10000];
-    const SOCIAL_PROOF_VISIBLE_MS = 10000;
+    const SOCIAL_PROOF_FIRST_DELAY_MS = 5000;
+    const SOCIAL_PROOF_REPEAT_MS = 7000;
+    const SOCIAL_PROOF_VISIBLE_MS = 5000;
     const SOCIAL_PROOF_MESSAGES = [
       { nome: "Mariana", local: "Parauapebas", interesse: "Imóvel" },
       { nome: "Carlos", local: "Parauapebas", interesse: "Carro" },
@@ -1670,7 +1671,6 @@
     const analysisPercentNumber = document.getElementById("analysisPercentNumber");
     const analysisRingProgress = document.getElementById("analysisRingProgress");
     let socialProofIndex = 0;
-    let socialProofIntervalIndex = 0;
     let socialProofTimer;
     let liveCounterTimer;
     let activeSimulationCount = 10;
@@ -2123,16 +2123,12 @@
       }, SOCIAL_PROOF_VISIBLE_MS);
 
       socialProofIndex += 1;
-      socialProofIntervalIndex = (socialProofIntervalIndex + 1) % SOCIAL_PROOF_INTERVALS.length;
-      socialProofTimer = window.setTimeout(
-        showSocialProof,
-        SOCIAL_PROOF_VISIBLE_MS + SOCIAL_PROOF_INTERVALS[socialProofIntervalIndex]
-      );
+      socialProofTimer = window.setTimeout(showSocialProof, SOCIAL_PROOF_REPEAT_MS);
     }
 
     function startSocialProof() {
       window.clearTimeout(socialProofTimer);
-      socialProofTimer = window.setTimeout(showSocialProof, SOCIAL_PROOF_INTERVALS[0]);
+      socialProofTimer = window.setTimeout(showSocialProof, SOCIAL_PROOF_FIRST_DELAY_MS);
     }
 
     function startLiveCounter() {
