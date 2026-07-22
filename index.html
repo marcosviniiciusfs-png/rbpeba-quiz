@@ -1409,7 +1409,7 @@
       </div>
       <section class="progress-wrap" aria-label="Progresso do quiz">
         <div class="progress-meta">
-          <span id="progressText">Pergunta 1 de 7</span>
+          <span id="progressText">Pergunta 1 de 4</span>
           <span id="progressPercent">0%</span>
         </div>
         <div class="progress-track">
@@ -1425,28 +1425,28 @@
         <p class="helper">Escolha o bem que mais combina com seu plano.</p>
         <div class="option-grid">
           <button class="option-card interest-card" type="button" data-choice="interesse" data-value="Imóvel">
-            <img class="interest-photo" alt="Imóvel residencial" src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=80" />
+            <img class="interest-photo" alt="Casa residencial moderna" src="assets/interesses/imovel.jpg" />
             <span class="interest-body">
               <span class="option-title">Imóvel</span>
               <span class="option-sub">Casa, apartamento, terreno ou construção.</span>
             </span>
           </button>
           <button class="option-card interest-card" type="button" data-choice="interesse" data-value="Carro">
-            <img class="interest-photo" alt="Carro" src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80" />
+            <img class="interest-photo" alt="Carro moderno" src="assets/interesses/carro.jpg" />
             <span class="interest-body">
               <span class="option-title">Carro</span>
               <span class="option-sub">Novo, seminovo ou troca planejada.</span>
             </span>
           </button>
           <button class="option-card interest-card" type="button" data-choice="interesse" data-value="Caminhão">
-            <img class="interest-photo" alt="Caminhão" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=900&q=80" />
+            <img class="interest-photo" alt="Caminhão de carga moderno" src="assets/interesses/caminhao.jpg" />
             <span class="interest-body">
               <span class="option-title">Caminhão</span>
               <span class="option-sub">Para trabalho, frota ou expansão.</span>
             </span>
           </button>
           <button class="option-card interest-card" type="button" data-choice="interesse" data-value="Maquinário">
-            <img class="interest-photo" alt="Retroescavadeira em obra" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Backhoe_loader_kaduna.jpg/960px-Backhoe_loader_kaduna.jpg" />
+            <img class="interest-photo" alt="Retroescavadeira amarela" src="assets/interesses/maquinario.jpg" />
             <span class="interest-body">
               <span class="option-title">Maquinário</span>
               <span class="option-sub">Equipamentos para produzir mais.</span>
@@ -1522,34 +1522,6 @@
           </button>
         </div>
         <div class="toast" id="creditoToast"></div>
-      </div>
-
-      <div class="screen" data-screen="7">
-        <span class="kicker">🗓️ Momento</span>
-        <h2 id="prazoTitle">Em quanto tempo você pretende adquirir esse bem?</h2>
-        <div class="option-grid">
-          <button class="option-card" type="button" data-choice="prazo" data-value="Imediato (até 30 dias)">
-            <span class="option-icon">⚡</span>
-            <span class="option-title">Imediato</span>
-            <span class="option-sub">Até 30 dias.</span>
-          </button>
-          <button class="option-card" type="button" data-choice="prazo" data-value="Em até 3 meses">
-            <span class="option-icon">📆</span>
-            <span class="option-title">Em até 3 meses</span>
-            <span class="option-sub">Já estou me organizando.</span>
-          </button>
-          <button class="option-card" type="button" data-choice="prazo" data-value="Em até 6 meses">
-            <span class="option-icon">🗓️</span>
-            <span class="option-title">Em até 6 meses</span>
-            <span class="option-sub">Quero simular com calma.</span>
-          </button>
-          <button class="option-card" type="button" data-choice="prazo" data-value="Mais de 6 meses">
-            <span class="option-icon">🔭</span>
-            <span class="option-title">Mais de 6 meses</span>
-            <span class="option-sub">Estou planejando o futuro.</span>
-          </button>
-        </div>
-        <div class="toast" id="prazoToast"></div>
       </div>
 
       <div class="screen" data-screen="8">
@@ -1661,7 +1633,7 @@
       { nome: "André", local: "Parauapebas", interesse: "Carro" }
     ];
 
-    const totalQuestions = 5;
+    const totalQuestions = 4;
     const state = {
       screen: 1,
       nome: "",
@@ -1669,7 +1641,6 @@
       temEntrada: "",
       valorCredito: 0,
       valorCreditoLabel: "",
-      prazo: "",
       telefone: "",
       leadSaved: false,
       leadSaveError: "",
@@ -1717,6 +1688,7 @@
     }
 
     function resetQuiz() {
+      clearAnalysisProgress();
       Object.assign(state, {
         screen: 1,
         nome: "",
@@ -1724,7 +1696,6 @@
         temEntrada: "",
         valorCredito: 0,
         valorCreditoLabel: "",
-        prazo: "",
         telefone: "",
         leadSaved: false,
         leadSaveError: "",
@@ -1737,7 +1708,8 @@
         error.textContent = "";
       });
       localStorage.removeItem(STORAGE_KEY);
-      showScreen(1);
+      window.history.replaceState({}, "", "/");
+      window.location.reload();
     }
 
     function loadState() {
@@ -1747,7 +1719,7 @@
       try {
         Object.assign(state, JSON.parse(saved));
         if (state.screen < 1) state.screen = 1;
-        if (state.screen === 5 || state.screen === 6) state.screen = 7;
+        if (state.screen === 5 || state.screen === 6 || state.screen === 7) state.screen = 4;
         nomeInput.value = state.nome || "";
         telefoneInput.value = state.telefone || "";
       } catch (error) {
@@ -1757,7 +1729,7 @@
 
     function currentQuestionNumber(screenIndex) {
       if (screenIndex <= 1) return 1;
-      const questionByScreen = { 1: 1, 2: 2, 3: 3, 4: 4, 7: 5 };
+      const questionByScreen = { 1: 1, 2: 2, 3: 3, 4: 4 };
       return questionByScreen[screenIndex] || totalQuestions;
     }
 
@@ -1783,7 +1755,6 @@
         : "Para qual bem você está buscando crédito?";
       document.getElementById("entradaTitle").textContent = `${nome}, você já tem algum valor para dar de entrada?`;
       document.getElementById("valorCreditoTitle").textContent = `${nome}, qual valor de crédito você pretende adquirir?`;
-      document.getElementById("prazoTitle").textContent = `Última etapa, ${nome}: em quanto tempo quer adquirir esse bem?`;
       document.getElementById("resultTitle").textContent = `Parabéns, ${nome}! Você está pré-qualificado(a) para simular o crédito para ${state.interesse || "seu bem"}`;
       document.getElementById("resultCopy").textContent = "Suas respostas já montaram um resumo para o especialista te atender com mais velocidade.";
       document.getElementById("rejectedTitle").textContent = `Obrigado, ${nome}.`;
@@ -1798,15 +1769,10 @@
 
     function updateSummary() {
       const entrada = state.temEntrada === "Sim" ? "Sim" : "Ainda não possui entrada";
-      const prazo = state.temEntrada === "Sim"
-        ? state.prazo || "-"
-        : "Não informado";
-
       document.getElementById("leadSummary").innerHTML = `
         <div>Interesse <span>${state.interesse || "-"}</span></div>
         <div>Crédito desejado <span>${state.valorCreditoLabel || "-"}</span></div>
         <div>Entrada <span>${entrada}</span></div>
-        <div>Prazo <span>${prazo}</span></div>
       `;
     }
 
@@ -1946,7 +1912,6 @@
         if (value === "Não") {
           state.valorCredito = 0;
           state.valorCreditoLabel = "";
-          state.prazo = "";
         }
         showToast("entradaToast", value === "Sim" ? "Perfeito! Vamos calibrar a simulação ✨" : "Obrigado. Vamos finalizar sua análise.");
         window.setTimeout(() => showScreen(next), 220);
@@ -1957,29 +1922,20 @@
         const selectedButton = document.querySelector(`[data-choice="valorCredito"][data-value="${value}"]`);
         state.valorCredito = Number(value);
         state.valorCreditoLabel = selectedButton?.dataset.label || formatCurrency(value);
-        showToast("creditoToast", "Perfeito! Agora vamos entender seu prazo.");
-        window.setTimeout(() => showScreen(7), 220);
-        return;
-      }
-
-      if (key === "prazo") {
-        showToast("prazoToast", "Analisando perfil 📊");
+        showToast("creditoToast", "Perfeito! Analisando seu perfil 📊");
         window.setTimeout(() => showScreen(8), 220);
+        return;
       }
     }
 
     function goBack() {
       if (state.screen <= 1) return;
       if (state.screen === 8 || state.screen === 9) {
-        showScreen(7);
+        showScreen(4);
         return;
       }
       if (state.screen === 10) {
         showScreen(3);
-        return;
-      }
-      if (state.screen === 7) {
-        showScreen(4);
         return;
       }
       showScreen(state.screen - 1);
@@ -1990,10 +1946,6 @@
       const credito = state.temEntrada === "Sim"
         ? state.valorCreditoLabel || formatCurrency(state.valorCredito)
         : "Não informado";
-      const prazo = state.temEntrada === "Sim"
-        ? state.prazo
-        : "Não informado";
-
       return [
         "Olá! Acabei de responder o quiz de qualificação e quero falar com um especialista.",
         "",
@@ -2002,7 +1954,6 @@
         `Interesse: ${state.interesse}`,
         `Valor de crédito desejado: ${credito}`,
         `Tem entrada: ${entrada}`,
-        `Prazo para adquirir: ${prazo}`,
         "",
         "Pode me chamar para uma simulação?"
       ].join("\n");
@@ -2099,7 +2050,7 @@
         whatsapp_digits: onlyDigits(state.telefone),
         interest: state.interesse,
         has_down_payment: state.temEntrada,
-        purchase_timeline: state.temEntrada === "Sim" ? state.prazo : "",
+        purchase_timeline: "",
         source_url: window.location.href,
         landing_domain: window.location.hostname,
         user_agent: navigator.userAgent,
@@ -2112,7 +2063,6 @@
           temEntrada: state.temEntrada,
           valorCredito: state.valorCredito,
           valorCreditoLabel: state.valorCreditoLabel,
-          prazo: state.prazo,
           dataHoraLocal: new Date().toISOString()
         }
       };
