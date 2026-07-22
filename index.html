@@ -1621,7 +1621,7 @@
     const SUPABASE_ANON_KEY = window.QUIZ_CONFIG?.SUPABASE_ANON_KEY || "";
     const SUPABASE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/submit-qualified-lead`;
     const META_PIXEL_ID = "561285766391551";
-    const STORAGE_KEY = "quiz-hurtz-lead-progress";
+    const LEGACY_STORAGE_KEY = "quiz-hurtz-lead-progress";
     const SOCIAL_PROOF_INTERVALS = [5000, 15000, 10000];
     const SOCIAL_PROOF_VISIBLE_MS = 10000;
     const SOCIAL_PROOF_MESSAGES = [
@@ -1683,10 +1683,6 @@
       return state.nome.trim().split(" ")[0] || "você";
     }
 
-    function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
     function resetQuiz() {
       clearAnalysisProgress();
       Object.assign(state, {
@@ -1707,24 +1703,9 @@
       document.querySelectorAll(".error").forEach((error) => {
         error.textContent = "";
       });
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(LEGACY_STORAGE_KEY);
       window.history.replaceState({}, "", "/");
       window.location.reload();
-    }
-
-    function loadState() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (!saved) return;
-
-      try {
-        Object.assign(state, JSON.parse(saved));
-        if (state.screen < 1) state.screen = 1;
-        if (state.screen === 5 || state.screen === 6 || state.screen === 7) state.screen = 4;
-        nomeInput.value = state.nome || "";
-        telefoneInput.value = state.telefone || "";
-      } catch (error) {
-        localStorage.removeItem(STORAGE_KEY);
-      }
     }
 
     function currentQuestionNumber(screenIndex) {
@@ -1804,7 +1785,6 @@
         startConfetti();
         saveQualifiedLead();
       }
-      saveState();
     }
 
     function showToast(id, message) {
@@ -2090,7 +2070,6 @@
 
       if (!isSupabaseConfigured()) {
         state.leadSaveError = "Supabase anon key ausente";
-        saveState();
         console.warn("Configure SUPABASE_ANON_KEY para salvar leads no Supabase.");
         return;
       }
@@ -2101,10 +2080,8 @@
         trackMetaLead(payload);
         state.leadSaved = true;
         state.leadSaveError = "";
-        saveState();
       } catch (error) {
         state.leadSaveError = String(error?.message || error);
-        saveState();
         console.error("Erro ao salvar lead qualificado:", error);
       }
     }
@@ -2114,7 +2091,6 @@
 
       const message = encodeURIComponent(buildWhatsappMessage());
       const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${message}`;
-      saveState();
       window.location.href = url;
     }
 
@@ -2250,14 +2226,12 @@
       state.nome = nomeInput.value;
       document.getElementById("nomeError").textContent = "";
       updatePersonalizedCopy();
-      saveState();
     });
 
     telefoneInput.addEventListener("input", () => {
       telefoneInput.value = maskPhone(telefoneInput.value);
       state.telefone = telefoneInput.value;
       document.getElementById("telefoneError").textContent = "";
-      saveState();
     });
 
     document.addEventListener("keydown", (event) => {
@@ -2287,9 +2261,9 @@
       }
     */
 
-    loadState();
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
     installMetaPixel();
-    showScreen(state.screen || 1);
+    showScreen(1);
     startLiveCounter();
     startSocialProof();
   </script>
