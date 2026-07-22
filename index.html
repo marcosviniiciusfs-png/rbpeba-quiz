@@ -1113,7 +1113,7 @@
 
     .social-proof {
       position: fixed;
-      right: max(16px, calc((100vw - 500px) / 2 + 16px));
+      right: 16px;
       bottom: max(26px, env(safe-area-inset-bottom));
       z-index: 20;
       width: min(270px, calc(100vw - 32px));
@@ -1131,6 +1131,21 @@
       pointer-events: none;
       transform: translateY(10px);
       transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    @media (min-width: 1024px) {
+      .social-proof {
+        top: 24px;
+        right: 24px;
+        bottom: auto;
+        width: 240px;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .social-proof {
+        width: 280px;
+      }
     }
 
     .social-proof.show {
