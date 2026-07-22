@@ -1347,7 +1347,7 @@
       .social-proof {
         position: fixed;
         display: grid;
-        top: 10px;
+        top: 64px;
         right: 10px;
         bottom: auto;
         width: min(220px, 100%);
@@ -1661,6 +1661,7 @@
     const progressPercent = document.getElementById("progressPercent");
     const progressBar = document.getElementById("progressBar");
     const activeSimulations = document.getElementById("activeSimulations");
+    const liveProof = document.querySelector(".live-proof");
     const nomeInput = document.getElementById("nome");
     const telefoneInput = document.getElementById("telefone");
     const socialProof = document.getElementById("socialProof");
@@ -2108,6 +2109,12 @@
       const item = SOCIAL_PROOF_MESSAGES[socialProofIndex % SOCIAL_PROOF_MESSAGES.length];
       socialProofTitle.textContent = `${item.nome} acabou de solicitar uma simulação`;
       socialProofText.textContent = `${item.local} • Crédito para ${item.interesse}`;
+      if (window.matchMedia("(max-width: 620px)").matches && liveProof) {
+        const counterBottom = liveProof.getBoundingClientRect().bottom;
+        socialProof.style.top = `${Math.ceil(counterBottom + 8)}px`;
+      } else {
+        socialProof.style.removeProperty("top");
+      }
       socialProof.classList.add("show");
       playSubtleNotice();
 
