@@ -77,43 +77,6 @@
       backdrop-filter: blur(16px);
     }
 
-    .top-row {
-      display: flex;
-      align-items: stretch;
-      gap: 10px;
-    }
-
-    .top-row .live-proof {
-      flex: 1 1 auto;
-    }
-
-    .restart-button {
-      flex: 0 0 auto;
-      min-height: 42px;
-      border: 1px solid var(--cor-borda);
-      border-radius: var(--raio);
-      background: rgba(255, 255, 255, 0.82);
-      padding: 9px 12px;
-      color: var(--cor-secundaria);
-      font-size: 12px;
-      font-weight: 800;
-      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-    }
-
-    .restart-button:hover {
-      border-color: var(--cor-secundaria);
-      background: var(--cor-soft);
-    }
-
-    .restart-button:active {
-      transform: scale(0.97);
-    }
-
-    .restart-button:focus-visible {
-      outline: 3px solid rgba(51, 0, 253, 0.25);
-      outline-offset: 2px;
-    }
-
     .live-proof {
       min-height: 42px;
       display: flex;
@@ -1382,9 +1345,44 @@
       }
 
       .social-proof {
-        right: 10px;
-        bottom: 14px;
-        width: calc(100vw - 20px);
+        position: static;
+        display: none;
+        width: min(220px, 100%);
+        justify-self: end;
+        padding: 8px 10px;
+        gap: 8px;
+        transform: none;
+      }
+
+      .social-proof.show {
+        display: grid;
+      }
+
+      .social-proof-icon {
+        width: 30px;
+        height: 30px;
+      }
+
+      .social-proof-icon::before {
+        top: 6px;
+        left: 10px;
+        width: 10px;
+        height: 10px;
+      }
+
+      .social-proof-icon::after {
+        left: 7px;
+        right: 7px;
+        bottom: 6px;
+        height: 8px;
+      }
+
+      .social-proof strong {
+        font-size: 0.76rem;
+      }
+
+      .social-proof span {
+        font-size: 0.68rem;
       }
     }
 
@@ -1415,12 +1413,9 @@
   </noscript>
   <main class="app">
     <header class="app-top">
-      <div class="top-row">
-        <div class="live-proof" aria-live="polite">
-          <span class="live-dot" aria-hidden="true"></span>
-          <span><strong id="activeSimulations">10</strong> pessoas fazendo simulação em <strong>Parauapebas</strong></span>
-        </div>
-        <button class="restart-button" type="button" data-restart aria-label="Reiniciar o quiz">Reiniciar</button>
+      <div class="live-proof" aria-live="polite">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span><strong id="activeSimulations">10</strong> pessoas fazendo simulação em <strong>Parauapebas</strong></span>
       </div>
       <section class="progress-wrap" aria-label="Progresso do quiz">
         <div class="progress-meta">
@@ -1431,6 +1426,13 @@
           <div class="progress-bar" id="progressBar"></div>
         </div>
       </section>
+      <aside class="social-proof" id="socialProof" aria-live="polite">
+        <div class="social-proof-icon" aria-hidden="true"></div>
+        <div>
+          <strong id="socialProofTitle">Nova simulação iniciada</strong>
+          <span id="socialProofText">Alguém acabou de buscar crédito.</span>
+        </div>
+      </aside>
     </header>
 
     <section class="quiz-card" aria-live="polite">
@@ -1620,13 +1622,6 @@
       </div>
     </section>
 
-    <aside class="social-proof" id="socialProof" aria-live="polite">
-      <div class="social-proof-icon" aria-hidden="true"></div>
-      <div>
-        <strong id="socialProofTitle">Nova simulação iniciada</strong>
-        <span id="socialProofText">Alguém acabou de buscar crédito.</span>
-      </div>
-    </aside>
   </main>
 
   <script src="./config.js"></script>
@@ -1696,31 +1691,6 @@
 
     function firstName() {
       return state.nome.trim().split(" ")[0] || "você";
-    }
-
-    function resetQuiz() {
-      clearAnalysisProgress();
-      Object.assign(state, {
-        screen: 1,
-        nome: "",
-        interesse: "",
-        temEntrada: "",
-        valorCredito: 0,
-        valorCreditoLabel: "",
-        telefone: "",
-        leadSaved: false,
-        leadSaveError: "",
-        leadEventId: ""
-      });
-
-      nomeInput.value = "";
-      telefoneInput.value = "";
-      document.querySelectorAll(".error").forEach((error) => {
-        error.textContent = "";
-      });
-      localStorage.removeItem(LEGACY_STORAGE_KEY);
-      window.history.replaceState({}, "", "/");
-      window.location.reload();
     }
 
     function currentQuestionNumber(screenIndex) {
@@ -2214,7 +2184,6 @@
     }
 
     document.querySelector("[data-close-page]").addEventListener("click", closePage);
-    document.querySelector("[data-restart]").addEventListener("click", resetQuiz);
     document.addEventListener("pointerdown", enableAudioNotice, { once: true });
     document.addEventListener("keydown", enableAudioNotice, { once: true });
 
