@@ -1345,17 +1345,15 @@
       }
 
       .social-proof {
-        position: static;
-        display: none;
+        position: fixed;
+        display: grid;
+        top: 10px;
+        right: 10px;
+        bottom: auto;
         width: min(220px, 100%);
-        justify-self: end;
         padding: 8px 10px;
         gap: 8px;
-        transform: none;
-      }
-
-      .social-proof.show {
-        display: grid;
+        transform: translateY(-6px);
       }
 
       .social-proof-icon {
