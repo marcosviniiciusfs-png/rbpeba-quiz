@@ -42,6 +42,8 @@ O workflow de deploy cria `config.js` automaticamente com esses valores.
 
 ## 3. Edge Function para Meta Conversions API
 
+O webhook padrao de leads e `https://webhook.simulead.com.br/webhook/7f7cb08b-6b82-4f56-9756-b6be8dd7b8d5`. O secret opcional `LEADS_WEBHOOK_URL` pode sobrescrever esse destino sem alterar o codigo.
+
 Deploy da function:
 
 ```bash

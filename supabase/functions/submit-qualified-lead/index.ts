@@ -42,9 +42,10 @@ function appendIfPresent(params: URLSearchParams, key: string, value: unknown) {
   params.set(key, String(value));
 }
 
+const DEFAULT_LEADS_WEBHOOK_URL = "https://webhook.simulead.com.br/webhook/7f7cb08b-6b82-4f56-9756-b6be8dd7b8d5";
+
 async function sendLeadWebhook(payload: LeadPayload, whatsappDigits: string, metaEventId: string) {
-  const webhookUrl = Deno.env.get("LEADS_WEBHOOK_URL");
-  if (!webhookUrl) return { configured: false, sent: false };
+  const webhookUrl = Deno.env.get("LEADS_WEBHOOK_URL") || DEFAULT_LEADS_WEBHOOK_URL;
 
   const url = new URL(webhookUrl);
   const params = url.searchParams;
