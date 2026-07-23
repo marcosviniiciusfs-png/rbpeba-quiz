@@ -1592,17 +1592,17 @@
           <div class="final-badge">🏆</div>
           <span class="kicker">🎉 Resultado</span>
         </div>
-        <h2 id="resultTitle">Parabéns! Você está pré-qualificado(a) para simular o crédito.</h2>
-        <p class="result-copy" id="resultCopy">Suas respostas já montaram um resumo para o especialista te atender com mais velocidade.</p>
+        <h1 id="resultTitle">Parabéns! Você foi aprovado para uma reunião com um especialista em crédito.</h1>
+        <p class="result-copy" id="resultCopy">Seu perfil foi aprovado e receberá atendimento prioritário.</p>
         <div class="queue-box">
           <div class="queue-stat">
-            <strong>233</strong>
-            <span>clientes em espera para atendimento</span>
+            <strong>3</strong>
+            <span>sua posição na fila prioritária</span>
           </div>
         </div>
-        <p class="status-note queue-position">Com base no seu perfil, você está na <strong>posição 23</strong> da fila.</p>
+        <p class="status-note queue-position">Seu perfil recebeu <strong>prioridade no atendimento</strong>.</p>
         <div class="lead-summary" id="leadSummary"></div>
-        <button class="btn full" type="button" data-submit>Fura fila</button>
+        <button class="btn full" type="button" data-submit>Falar com especialista</button>
         <p class="privacy">Ao continuar, você será direcionado ao WhatsApp com suas respostas já organizadas.</p>
       </div>
 
@@ -1720,8 +1720,8 @@
         : "Para qual bem você está buscando crédito?";
       document.getElementById("entradaTitle").textContent = `${nome}, você já tem algum valor para dar de entrada?`;
       document.getElementById("valorCreditoTitle").textContent = `${nome}, qual valor de crédito você pretende adquirir?`;
-      document.getElementById("resultTitle").textContent = `Parabéns, ${nome}! Você está pré-qualificado(a) para simular o crédito para ${state.interesse || "seu bem"}`;
-      document.getElementById("resultCopy").textContent = "Suas respostas já montaram um resumo para o especialista te atender com mais velocidade.";
+      document.getElementById("resultTitle").textContent = `Parabéns, ${nome}! Você foi aprovado para uma reunião com um especialista em crédito.`;
+      document.getElementById("resultCopy").textContent = `Seu perfil para ${state.interesse || "crédito"} foi aprovado e receberá atendimento prioritário.`;
       document.getElementById("rejectedTitle").textContent = `Obrigado, ${nome}.`;
     }
 
