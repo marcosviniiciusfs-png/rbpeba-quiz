@@ -231,6 +231,12 @@
       font-weight: 900;
     }
 
+    #resultTitle {
+      max-width: 500px;
+      font-size: clamp(1.65rem, 5vw, 2.2rem);
+      line-height: 1.1;
+    }
+
     .subtitle,
     .helper,
     .result-copy {
@@ -369,6 +375,10 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
+    }
+
+    .entry-options {
+      grid-template-columns: 1fr;
     }
 
     .option-list {
@@ -1501,7 +1511,7 @@
         <span class="kicker">💰 Entrada</span>
         <h2 id="entradaTitle">Quanto você tem disponível para dar de entrada?</h2>
         <p class="helper">Escolha a faixa que mais se aproxima do valor disponível.</p>
-        <div class="option-grid">
+        <div class="option-grid entry-options">
           <button class="choice-btn" type="button" data-choice="valorEntradaFaixa" data-value="Até R$ 10 mil" data-amount="10000"><span class="choice-icon">💵</span> Até R$ 10 mil</button>
           <button class="choice-btn" type="button" data-choice="valorEntradaFaixa" data-value="De R$ 20 mil a R$ 30 mil" data-amount="25000"><span class="choice-icon">💰</span> De R$ 20 mil a R$ 30 mil</button>
           <button class="choice-btn" type="button" data-choice="valorEntradaFaixa" data-value="Acima de R$ 30 mil" data-amount="30001"><span class="choice-icon">📈</span> Acima de R$ 30 mil</button>
