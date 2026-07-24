@@ -60,6 +60,7 @@ async function sendLeadWebhook(payload: LeadPayload, whatsappDigits: string, met
   appendIfPresent(params, "requested_credit_range", answers.valorCreditoLabel);
   appendIfPresent(params, "has_down_payment", payload.has_down_payment);
   appendIfPresent(params, "down_payment_value", payload.down_payment_value);
+  appendIfPresent(params, "down_payment_range", answers.valorEntradaFaixa);
   appendIfPresent(params, "monthly_payment_value", payload.monthly_payment_value);
   appendIfPresent(params, "purchase_timeline", payload.purchase_timeline);
   appendIfPresent(params, "source_url", payload.source_url);
@@ -172,6 +173,7 @@ serve(async (req) => {
           interest: payload.interest,
           has_down_payment: payload.has_down_payment,
           down_payment_value: payload.down_payment_value,
+          down_payment_range: payload.raw_answers?.valorEntradaFaixa,
           monthly_payment_value: payload.monthly_payment_value,
           purchase_timeline: payload.purchase_timeline,
           requested_credit_value: payload.raw_answers?.valorCredito,

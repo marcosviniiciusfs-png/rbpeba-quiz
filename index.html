@@ -1499,11 +1499,12 @@
 
       <div class="screen" data-screen="3">
         <span class="kicker">💰 Entrada</span>
-        <h2 id="entradaTitle">Você já tem algum valor para dar de entrada?</h2>
-        <p class="helper">Isso ajuda o especialista a sugerir um caminho mais compatível.</p>
+        <h2 id="entradaTitle">Quanto você tem disponível para dar de entrada?</h2>
+        <p class="helper">Escolha a faixa que mais se aproxima do valor disponível.</p>
         <div class="option-grid">
-          <button class="choice-btn" type="button" data-choice="temEntrada" data-value="Sim"><span class="choice-icon">✅</span> Sim</button>
-          <button class="choice-btn" type="button" data-choice="temEntrada" data-value="Não"><span class="choice-icon x-icon">X</span> Ainda não</button>
+          <button class="choice-btn" type="button" data-choice="valorEntradaFaixa" data-value="Até R$ 10 mil" data-amount="10000"><span class="choice-icon">💵</span> Até R$ 10 mil</button>
+          <button class="choice-btn" type="button" data-choice="valorEntradaFaixa" data-value="De R$ 20 mil a R$ 30 mil" data-amount="25000"><span class="choice-icon">💰</span> De R$ 20 mil a R$ 30 mil</button>
+          <button class="choice-btn" type="button" data-choice="valorEntradaFaixa" data-value="Acima de R$ 30 mil" data-amount="30001"><span class="choice-icon">📈</span> Acima de R$ 30 mil</button>
         </div>
         <div class="toast" id="entradaToast"></div>
       </div>
@@ -1653,7 +1654,8 @@
       screen: 1,
       nome: "",
       interesse: "",
-      temEntrada: "",
+      valorEntradaFaixa: "",
+      valorEntrada: 0,
       valorCredito: 0,
       valorCreditoLabel: "",
       telefone: "",
@@ -1724,7 +1726,7 @@
       document.getElementById("interestTitle").textContent = state.nome.trim()
         ? `Show, ${nome}! Para qual bem você está buscando crédito?`
         : "Para qual bem você está buscando crédito?";
-      document.getElementById("entradaTitle").textContent = `${nome}, você já tem algum valor para dar de entrada?`;
+      document.getElementById("entradaTitle").textContent = `${nome}, quanto você tem disponível para dar de entrada?`;
       document.getElementById("valorCreditoTitle").textContent = `${nome}, qual valor de crédito você pretende adquirir?`;
       document.getElementById("resultTitle").textContent = `Parabéns, ${nome}! Você foi aprovado para uma reunião com um especialista em crédito.`;
       document.getElementById("resultCopy").textContent = `Seu perfil para ${state.interesse || "crédito"} foi aprovado e receberá atendimento prioritário.`;
@@ -1739,11 +1741,10 @@
     }
 
     function updateSummary() {
-      const entrada = state.temEntrada === "Sim" ? "Sim" : "Ainda não possui entrada";
       document.getElementById("leadSummary").innerHTML = `
         <div>Interesse <span>${state.interesse || "-"}</span></div>
         <div>Crédito desejado <span>${state.valorCreditoLabel || "-"}</span></div>
-        <div>Entrada <span>${entrada}</span></div>
+        <div>Entrada disponível <span>${state.valorEntradaFaixa || "-"}</span></div>
       `;
     }
 
@@ -1877,14 +1878,11 @@
         return;
       }
 
-      if (key === "temEntrada") {
-        const next = value === "Sim" ? 4 : 10;
-        if (value === "Não") {
-          state.valorCredito = 0;
-          state.valorCreditoLabel = "";
-        }
-        showToast("entradaToast", value === "Sim" ? "Perfeito! Vamos calibrar a simulação ✨" : "Obrigado. Vamos finalizar sua análise.");
-        window.setTimeout(() => showScreen(next), 220);
+      if (key === "valorEntradaFaixa") {
+        const selectedButton = document.querySelector(`[data-choice="valorEntradaFaixa"][data-value="${value}"]`);
+        state.valorEntrada = Number(selectedButton?.dataset.amount || 0);
+        showToast("entradaToast", "Perfeito! Vamos calibrar a simulação ✨");
+        window.setTimeout(() => showScreen(4), 220);
         return;
       }
 
@@ -1912,10 +1910,8 @@
     }
 
     function buildWhatsappMessage() {
-      const entrada = state.temEntrada === "Sim" ? "Sim" : "Não possui entrada no momento";
-      const credito = state.temEntrada === "Sim"
-        ? state.valorCreditoLabel || formatCurrency(state.valorCredito)
-        : "Não informado";
+      const entrada = state.valorEntradaFaixa || "Não informado";
+      const credito = state.valorCreditoLabel || formatCurrency(state.valorCredito);
       return [
         "Olá! Acabei de responder o quiz de qualificação e quero falar com um especialista.",
         "",
@@ -1923,7 +1919,7 @@
         `WhatsApp informado: ${state.telefone}`,
         `Interesse: ${state.interesse}`,
         `Valor de crédito desejado: ${credito}`,
-        `Tem entrada: ${entrada}`,
+        `Entrada disponível: ${entrada}`,
         "",
         "Pode me chamar para uma simulação?"
       ].join("\n");
@@ -2002,6 +1998,7 @@
         content_category: "credito",
         interest: payload.interest,
         has_down_payment: payload.has_down_payment,
+        down_payment_value: payload.down_payment_value,
         purchase_timeline: payload.purchase_timeline,
         requested_credit_value: payload.raw_answers?.valorCredito,
         requested_credit_range: payload.raw_answers?.valorCreditoLabel
@@ -2019,7 +2016,8 @@
         whatsapp: state.telefone,
         whatsapp_digits: onlyDigits(state.telefone),
         interest: state.interesse,
-        has_down_payment: state.temEntrada,
+        has_down_payment: "Sim",
+        down_payment_value: state.valorEntrada,
         purchase_timeline: "",
         source_url: window.location.href,
         landing_domain: window.location.hostname,
@@ -2030,7 +2028,8 @@
           nome: state.nome,
           telefone: state.telefone,
           interesse: state.interesse,
-          temEntrada: state.temEntrada,
+          valorEntradaFaixa: state.valorEntradaFaixa,
+          valorEntrada: state.valorEntrada,
           valorCredito: state.valorCredito,
           valorCreditoLabel: state.valorCreditoLabel,
           dataHoraLocal: new Date().toISOString()
@@ -2056,7 +2055,7 @@
     }
 
     async function saveQualifiedLead() {
-      if (state.leadSaved || state.temEntrada !== "Sim") return;
+      if (state.leadSaved) return;
 
       if (!isSupabaseConfigured()) {
         state.leadSaveError = "Supabase anon key ausente";
